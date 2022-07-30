@@ -1,23 +1,33 @@
 import { useState } from "react";
-import { Card } from "../card";
+import Card from "../card";
 import "./style.css";
 
-const CardsList = ({ cardsList }) => {
+export const CardsList = ({ cardsList }) => {
   const [suitFilter, setSuitFilter] = useState(false);
+  const [filter, setFilter] = useState(null)
 
   const handleSuitFilter = (e) => {
-    if (e.target.id = suitFilter) {
-      suitFilter = true;
-      e.target.checked = false;
-    } else {
-      suitFilter = e.target.id
-    }
+    const filtrados = cardsList.filter(card => {
+      return card.suit === e.target.id
+    })
+    setFilter(filtrados)
+    setSuitFilter(true)
   };
 
   return (
+    <>
+    
     <div className="filter-container">
       <p>Filtrar por naipe</p>
       <div>
+      <input
+          onClick={() => setSuitFilter(false)}
+          type="radio"
+          id="TODOS"
+          name="suit"
+        />
+        <label for="TODOS">Todos</label>
+
         <input
           onClick={handleSuitFilter}
           type="radio"
@@ -53,18 +63,15 @@ const CardsList = ({ cardsList }) => {
     </div>
     <div>
 
-      {!suitFilter &&
+      {!suitFilter ?
         cardsList.map((actual, index) => {
-          return <Card card={actual} key={index} />;
-        })}
-
-      {suitFilter &&
-        cardsList
-          .filter((actual) => actual.suit === suitFilter)
-          .map((actual, index) => {
-            <Card card={actual} key={index} />;
-          })}
+          return <Card card={actual} key={index}></Card>
+        })
+        : filter.map((actual, index) => {
+          return <Card card={actual} key={index}></Card>
+        })
+        }
     </div>
+    </>
   );
 };
-
